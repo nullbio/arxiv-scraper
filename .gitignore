@@ -3,6 +3,7 @@ todo.txt
 log.txt
 arxiv_papers
 arxiv_papers/*
+arxiv.db
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
