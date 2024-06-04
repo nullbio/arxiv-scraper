@@ -1,9 +1,11 @@
 .vscode
 todo.txt
 log.txt
+errors.txt
 arxiv_papers
 arxiv_papers/*
 arxiv.db
+arxiv.test.db
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

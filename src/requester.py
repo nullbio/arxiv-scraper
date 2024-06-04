@@ -3,7 +3,7 @@ from requests import Session
 
 
 class Requester(Session):
-    def __init__(self, session, logger, sleep_seconds=3, max_retries=5):
+    def __init__(self, session, logger, sleep_seconds=5, max_retries=5):
         self.session = session
         self.logger = logger
         self.sleep_seconds = sleep_seconds
@@ -11,9 +11,9 @@ class Requester(Session):
 
     def get(self, url, params=None, headers=None):
         self.logger.debug(f"Requesting {url}")
-        counter = 0
+        counter = 1
         result = None
-        while counter < self.max_retries:
+        while counter <= self.max_retries:
             try:
                 result = self.session.get(url, params=params, headers=headers)
                 if result.status_code != 200:
@@ -23,13 +23,24 @@ class Requester(Session):
 
             except Exception as e:
                 self.logger.error(
-                    f"Error while requesting {url}: {e}, status code: {result.status_code}. Trying again in {counter} seconds"
+                    "Error while requesting %s: %s, status code: %s. "
+                    "Trying again in %s seconds",
+                    url,
+                    e,
+                    result.status_code,
+                    self.sleep_seconds * counter,
                 )
                 if counter == self.max_retries:
-                    raise Exception(
-                        f"Error while requesting {url}: {e}, status code: {result.status_code}. Max retries reached"
+                    self.logger.error(
+                        "Error while requesting %s: %s, status code: %s."
+                        "Max retries reached",
+                        url,
+                        e,
+                        result.status_code,
                     )
                     exit(1)
                 time.sleep(self.sleep_seconds * counter)
                 counter += 1
+                continue
+
             return result

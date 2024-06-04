@@ -1,4 +1,5 @@
 import pytest
+import os
 from requests import Session
 from requester import Requester
 from unittest.mock import Mock
@@ -8,20 +9,20 @@ import parse
 from sql import SQL
 
 # Define a list of URL regex matches to file paths
-# fmt: off
 url_file_mapping = [
-    (re.compile(r"^https://arxiv.org/list/cs/1805$"), "tests/html/total_entries.html"),
-    (re.compile(r"^https://example\.com/page2$"), "path/to/html/files/page2.html"),
-    (re.compile(r"^https://example\.com/articles/\d+$"), "path/to/html/files/article.html"),
+    (
+        re.compile(r"^https://arxiv.org/list/cs/1805$"),
+        "tests/html/total_entries.html",
+    ),
+    (
+        re.compile(r"^https://example\.com/page2$"),
+        "path/to/html/files/page2.html",
+    ),
+    (
+        re.compile(r"^https://example\.com/articles/\d+$"),
+        "path/to/html/files/article.html",
+    ),
 ]
-# fmt: on
-
-
-@pytest.fixture
-def logger():
-    logger = logging.getLogger(__name__)
-    logger.setLevel(logging.DEBUG)
-    return logger
 
 
 # Mock the requests.get to return html files from disk instead.
@@ -46,9 +47,17 @@ def get_mock(url, *args, **kwargs):
         response_mock.text = html_content
         response_mock.status_code = 200
     else:
-        # If no matching file path is found, raise an exception or set a default response
+        # If no matching file path is found,
+        # raise an exception or set a default response
         raise Exception(f"No matching file path found for URL: {url}")
     return response_mock
+
+
+@pytest.fixture(scope="class")
+def logger():
+    logger = logging.getLogger(__name__)
+    logger.setLevel(logging.DEBUG)
+    return logger
 
 
 @pytest.fixture
@@ -63,6 +72,13 @@ def parser(requester, logger):
     return parse.Parse(requester, logger)
 
 
-@pytest.fixture
+@pytest.fixture(scope="class")
 def sql(logger):
-    return SQL("arxiv_test.db", logger)
+    sql = SQL("arxiv.test.db", logger)
+    yield sql
+    # run the cleanup, by utilizing yield instead of return.
+    # will teardown after all class tests are done (due to fixture scope)
+    logger.debug("cleaning up test sql database")
+    sql.close()
+    # delete the arxiv.test.db file
+    os.remove("arxiv.test.db")

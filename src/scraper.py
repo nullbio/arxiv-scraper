@@ -1,4 +1,3 @@
-from pprint import pprint
 from datetime import datetime
 import os
 from typing import Tuple
@@ -14,8 +13,7 @@ class Category:
     def get_month_urls(self):
         month_urls = []
         curr_yr = datetime.now().year
-        # start at -1 from current month, because archives dont happen til end of month
-        curr_mnth = datetime.now().month - 1
+        curr_mnth = datetime.now().month
         yr = curr_yr
         while yr >= self.end_year:
             for mnth in range(12, 0, -1):
@@ -53,13 +51,16 @@ class ArchivePapers:
         return
 
 
-# By appending ?skip=0&show=2000 we can get 2000 results per page at a time, where skip is the offset (exclusive)
-# If we see <dl id="articles"><p>No updates for this time period.</p></dl> we know we've reached the end of the archive.
+# By appending ?skip=0&show=2000 we can get 2000 results
+# per page at a time, where skip is the offset (exclusive)
+# If we see <dl id="articles"><p>No updates for this
+# time period.</p></dl> we know we've reached the end of the archive.
 def scrape_archive_page(skip: int) -> Tuple[ArchivePage, ArchivePapers]:
     return ArchivePage(), ArchivePapers()
 
 
-# Get the categories we want to scrape and their oldest years they have papers for.
+# Get the categories we want to scrape and their
+# oldest years they have papers for.
 categories = map(
     lambda x: Category(x["category"], x["end_year"]), sql.get_categories()
 )
@@ -68,7 +69,8 @@ categories = map(
 # metadata because it's already been finished.
 skip_list = sql.get_finished_archive_urls()
 
-# Start scraping, one unfinished category at a time, by looping through their month urls.
+# Start scraping, one unfinished category at a time,
+# by looping through their month urls.
 i = 0
 for c in categories:
     i += len(c.month_urls)

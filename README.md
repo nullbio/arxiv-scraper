@@ -1,6 +1,6 @@
-WORK IN PROGRESS, CURRENTLY NON-FUNCTIONAL. WILL REMOVE THIS HEADER WHEN PROJECT IS IN WORKING STATE.
-
 # arxiv-scraper
+
+WORK IN PROGRESS, CURRENTLY NON-FUNCTIONAL. WILL REMOVE THIS HEADER WHEN PROJECT IS IN WORKING STATE.
 
 The goal of this project is to create a replica of arXiv's database of papers and paper metadata.
 

@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS categories (
 https://arxiv.org/year/cs -> /<yymm>
 each yymm archive page has a total number of entries that we can scrape
 by paginating through the pages. */
-CREATE TABLE IF NOT EXISTS categories_monthly_archive (
+CREATE TABLE IF NOT EXISTS categories_monthly_archives (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     category TEXT NOT NULL,
     /* year is the full year, mm is 01-12 */
@@ -28,7 +28,8 @@ CREATE TABLE IF NOT EXISTS categories_monthly_archive (
 /* during an integrity check scrape, if we notice that the total entries
 have changed over time, we record that invent here so it can be further investigated.
 The values stored in this table represent the values at the time of date_of_mismatch,
-which will be out of sync with categories_monthly_archive.total_entries */
+which will be out of sync with categories_monthly_archive.total_entries
+ */
 CREATE TABLE IF NOT EXISTS total_entries_mismatch (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     categories_monthly_archive_id INTEGER NOT NULL,
