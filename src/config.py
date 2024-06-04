@@ -21,6 +21,7 @@ withdraw_keywords = [
 
 # Use this for requests
 session = Session()
+
 # Apply a rate-limit (4 requests per second) to all requests
 # As per guidance of Arxiv scraping recommendations in their docs
 adapter = LimiterAdapter(per_second=4)
@@ -28,10 +29,8 @@ session.mount("http://", adapter)
 session.mount("https://", adapter)
 
 # set up the logger
-logger = logging.getLogger(__name__)
-
 logging.basicConfig(filename="log.txt", level=logging.DEBUG)
-
+logger = logging.getLogger(__name__)
 # add a console logger handler
 logger.addHandler(logging.StreamHandler())
 

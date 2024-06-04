@@ -36,4 +36,5 @@ class Parse:
             )
             exit(1)
 
+        self.logger.debug("Total entries for %s: %s", url, total_entries)
         return total_entries

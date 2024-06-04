@@ -68,7 +68,7 @@ categories = map(
 # metadata because it's already been finished.
 skip_list = sql.get_finished_archive_urls()
 
-# Start scraping, one category at a time, by looping through their month urls.
+# Start scraping, one unfinished category at a time, by looping through their month urls.
 i = 0
 for c in categories:
     i += len(c.month_urls)
