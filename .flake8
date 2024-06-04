@@ -1,0 +1,10 @@
+[flake8]
+exclude =
+    __pycache__,
+    .vscode,
+    arxiv_papers,
+    tests/html,
+    manage.py,
+    venv,
+    .git
+ignore = F405, F403

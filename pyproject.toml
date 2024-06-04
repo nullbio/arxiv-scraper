@@ -1,0 +1,35 @@
+[project]
+name = "arxiv-scraper"
+version = "0.1.0"
+description = "Arxiv scraper and deleted paper monitor"
+authors = [
+    { name = "Patrick O'Brien", email = "721274+nullbio@users.noreply.github.com" },
+]
+dependencies = [
+    "arxivscraper==0.0.5",
+    "beautifulsoup4==4.12.3",
+    "requests==2.32.3",
+    "caribou==0.3.0",
+    "flake8==7.0.0",
+    "black==24.4.2",
+    "isort==5.13.2",
+    "requests-ratelimiter==0.6.0",
+    "pytest==8.2.1",
+]
+requires-python = "==3.12.*"
+readme = "README.md"
+license = { text = "MIT" }
+
+
+[tool.pdm]
+distribution = false
+
+[tool.black]
+line-length = 79
+
+[tool.isort]
+profile = "black"
+line_length = 79
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
