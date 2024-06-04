@@ -2,6 +2,7 @@ from requests import Session
 from requests_ratelimiter import LimiterAdapter
 import parse as parse
 import logging
+from requester import Requests
 from sql import SQL
 
 DATABASE_FILE = "arxiv.db"
@@ -19,14 +20,6 @@ withdraw_keywords = [
     "retract",
 ]
 
-# Use this for requests
-session = Session()
-
-# Apply a rate-limit (4 requests per second) to all requests
-# As per guidance of Arxiv scraping recommendations in their docs
-adapter = LimiterAdapter(per_second=4)
-session.mount("http://", adapter)
-session.mount("https://", adapter)
 
 # set up the logger
 logging.basicConfig(filename="log.txt", level=logging.DEBUG)
@@ -34,8 +27,21 @@ logger = logging.getLogger(__name__)
 # add a console logger handler
 logger.addHandler(logging.StreamHandler())
 
+# configure the requests session
+# Apply a rate-limit (4 requests per second) to all requests
+# As per guidance of Arxiv scraping recommendations in their docs
+session = Session()
+adapter = LimiterAdapter(per_second=4)
+session.mount("http://", adapter)
+session.mount("https://", adapter)
+# set up the requests helper
+requester = Requests(session, logger)
+
 # set up the parser
-parser = parse.Parse(session, logger)
+parser = parse.Parse(requester, logger)
 
 # set up the sqlite connection
 sql = SQL(DATABASE_FILE, logger)
+
+
+__all__ = [logger, parser, sql, requester]

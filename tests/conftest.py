@@ -1,5 +1,6 @@
 import pytest
 from requests import Session
+from requester import Requester
 from unittest.mock import Mock
 import logging
 import re
@@ -51,15 +52,15 @@ def get_mock(url, *args, **kwargs):
 
 
 @pytest.fixture
-def session():
+def requester(logger):
     sess = Session()
     sess.get = Mock(side_effect=get_mock)
-    return sess
+    return Requester(sess, logger)
 
 
 @pytest.fixture
-def parser(session, logger):
-    return parse.Parse(session, logger)
+def parser(requester, logger):
+    return parse.Parse(requester, logger)
 
 
 @pytest.fixture
