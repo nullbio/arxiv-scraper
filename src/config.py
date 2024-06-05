@@ -1,8 +1,10 @@
+import logging
 from requests import Session
 from requests_ratelimiter import LimiterAdapter
-import parse as parse
-import logging
-from requester import Requester
+
+# Local modules
+from scrape import Scrape
+from request import Request
 from sql import SQL
 
 DATABASE_FILE = "arxiv.db"
@@ -23,15 +25,15 @@ withdraw_keywords = [
 
 
 # set up the logger
-logger = logging.getLogger(__name__)
+log = logging.getLogger(__name__)
 logging.basicConfig(filename=LOG_FILE, level=logging.DEBUG)
 # add a console logger handler
-logger.addHandler(logging.StreamHandler())
+log.addHandler(logging.StreamHandler())
 
 # error file handler
 err_fh = logging.FileHandler(ERROR_LOG_FILE)
 err_fh.setLevel(logging.ERROR)
-logger.addHandler(err_fh)
+log.addHandler(err_fh)
 
 # configure the requests session
 # Apply a rate-limit (4 requests per second) to all requests
@@ -41,13 +43,13 @@ adapter = LimiterAdapter(per_second=4)
 session.mount("http://", adapter)
 session.mount("https://", adapter)
 # set up the requests helper
-requester = Requester(session, logger)
+request = Request(session, log)
 
-# set up the parser
-parser = parse.Parse(requester, logger)
+# set up the scraper
+scrape = Scrape(request, log, DOWNLOAD_DIRECTORY)
 
 # set up the sqlite connection
-sql = SQL(DATABASE_FILE, logger)
+sql = SQL(DATABASE_FILE, log)
 
 
-__all__ = ["logger", "parser", "sql", "requester", DOWNLOAD_DIRECTORY]
+__all__ = ["log", "scrape", "sql", "request"]

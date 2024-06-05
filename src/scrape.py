@@ -1,7 +1,11 @@
 from datetime import datetime
 import os
 from typing import Tuple
-from config import *
+import logging
+
+# Local modules
+from request import Request
+import parse
 
 
 class Category:
@@ -29,10 +33,24 @@ class Category:
         return month_urls
 
 
-class Scraper:
-    def __init__(self, **kwargs):
+class Scrape:
+    def __init__(
+        self, request: Request, log: logging.Logger, download_dir: str
+    ):
+        self.request = request
+        self.log = log
+        self.download_dir = download_dir
+        # Create a parser
+        self.parse = parse.Parse(request, log)
+
         # Create the download directory if it doesn't exist
-        os.makedirs(DOWNLOAD_DIRECTORY, exist_ok=True)
+        os.makedirs(download_dir, exist_ok=True)
+
+    # Get the total number of entries on a particular archive url page:
+    # Example: https://arxiv.org/list/cs/1805 -> returns int(4158)
+    def total_entries(self, url: str) -> int:
+        r = self.request.get(url)
+        return self.parse.total_entries(r.text)
 
 
 class ArchivePage:
@@ -57,37 +75,3 @@ class ArchivePapers:
 # time period.</p></dl> we know we've reached the end of the archive.
 def scrape_archive_page(skip: int) -> Tuple[ArchivePage, ArchivePapers]:
     return ArchivePage(), ArchivePapers()
-
-
-# Get the categories we want to scrape and their
-# oldest years they have papers for.
-categories = map(
-    lambda x: Category(x["category"], x["end_year"]), sql.get_categories()
-)
-
-# Create the skip list. We don't want to try and download this
-# metadata because it's already been finished.
-skip_list = sql.get_finished_archive_urls()
-
-# Start scraping, one unfinished category at a time,
-# by looping through their month urls.
-i = 0
-for c in categories:
-    i += len(c.month_urls)
-    for mu in c.month_urls:
-        # if mu is in skip_list, skip it
-        if mu in skip_list:
-            continue
-
-        print(f"Scraping {mu}")
-        total_entries = parser.get_total_entries(mu)
-
-        # call scrape archive page in loop, relative to total entries offset
-        # scrape archive page will return a ArchivePage and
-
-
-print(i)
-# Find the pages we haven't scraped yet.
-
-# Close sqlite database at end of program
-sql.close()

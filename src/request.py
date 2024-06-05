@@ -1,16 +1,19 @@
 import time
+import logging
 from requests import Session
 
 
-class Requester(Session):
-    def __init__(self, session, logger, sleep_seconds=5, max_retries=5):
+class Request(Session):
+    def __init__(
+        self, session, log: logging.Logger, sleep_seconds=5, max_retries=5
+    ):
         self.session = session
-        self.logger = logger
+        self.log = log
         self.sleep_seconds = sleep_seconds
         self.max_retries = max_retries
 
     def get(self, url, params=None, headers=None):
-        self.logger.debug(f"Requesting {url}")
+        self.log.debug(f"Requesting {url}")
         counter = 1
         result = None
         while counter <= self.max_retries:
@@ -22,7 +25,7 @@ class Requester(Session):
                     )
 
             except Exception as e:
-                self.logger.error(
+                self.log.error(
                     "Error while requesting %s: %s, status code: %s. "
                     "Trying again in %s seconds",
                     url,
@@ -31,7 +34,7 @@ class Requester(Session):
                     self.sleep_seconds * counter,
                 )
                 if counter == self.max_retries:
-                    self.logger.error(
+                    self.log.error(
                         "Error while requesting %s: %s, status code: %s."
                         "Max retries reached",
                         url,

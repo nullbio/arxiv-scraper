@@ -1,11 +1,14 @@
 import pytest
 import os
-from requests import Session
-from requester import Requester
-from unittest.mock import Mock
 import logging
 import re
-import parse
+from requests import Session
+from unittest.mock import Mock
+
+# Local modules
+from request import Request
+from scrape import Scrape
+from parse import Parse
 from sql import SQL
 
 # Define a list of URL regex matches to file paths
@@ -54,31 +57,36 @@ def get_mock(url, *args, **kwargs):
 
 
 @pytest.fixture(scope="class")
-def logger():
-    logger = logging.getLogger(__name__)
-    logger.setLevel(logging.DEBUG)
-    return logger
+def log():
+    log = logging.getLogger(__name__)
+    log.setLevel(logging.DEBUG)
+    return log
 
 
 @pytest.fixture
-def requester(logger):
+def requester(log):
     sess = Session()
     sess.get = Mock(side_effect=get_mock)
-    return Requester(sess, logger)
+    return Request(sess, log)
 
 
 @pytest.fixture
-def parser(requester, logger):
-    return parse.Parse(requester, logger)
+def parse(log):
+    return Parse(log)
+
+
+@pytest.fixture
+def scrape(requester, log):
+    return Scrape(requester, log)
 
 
 @pytest.fixture(scope="class")
-def sql(logger):
-    sql = SQL("arxiv.test.db", logger)
+def sql(log):
+    sql = SQL("arxiv.test.db", log)
     yield sql
     # run the cleanup, by utilizing yield instead of return.
     # will teardown after all class tests are done (due to fixture scope)
-    logger.debug("cleaning up test sql database")
+    log.debug("cleaning up test sql database")
     sql.close()
     # delete the arxiv.test.db file
     os.remove("arxiv.test.db")
