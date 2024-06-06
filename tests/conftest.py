@@ -1,14 +1,15 @@
-import pytest
-import os
 import logging
+import os
 import re
-from requests import Session
 from unittest.mock import Mock
 
+import pytest
+from requests import Session
+
 # Local modules
+from parse import Parse
 from request import Request
 from scrape import Scrape
-from parse import Parse
 from sql import SQL
 
 # Define a list of URL regex matches to file paths

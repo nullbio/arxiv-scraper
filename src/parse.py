@@ -1,6 +1,7 @@
-from bs4 import BeautifulSoup
-import re
 import logging
+import re
+
+from bs4 import BeautifulSoup
 
 
 class Parse:

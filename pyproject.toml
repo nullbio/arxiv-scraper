@@ -16,15 +16,20 @@ dependencies = [
     "requests-ratelimiter==0.6.0",
     "pytest==8.2.1",
     "pytest-cov==5.0.0",
+    "setuptools==70.0.0",
+    "alembic==1.13.1",
+    "aiosqlite==0.20.0",
+    "django==5.0.6",
+    "atlas-provider-django==0.1.9",
 ]
 requires-python = "==3.12.*"
 readme = "README.md"
 license = { text = "MIT" }
 
 [tool.pytest.ini_options]
-log_cli = 1
+log_cli    = 1
 pythonpath = "src"
-addopts = ["--import-mode=importlib"]
+addopts    = ["--import-mode=importlib"]
 
 [tool.pdm]
 distribution = false
@@ -36,8 +41,8 @@ pycov = "pytest --cov=src tests/"
 line-length = 79
 
 [tool.isort]
-profile = "black"
-line_length = 79
-multi_line_output = 3
+profile                = "black"
+line_length            = 79
+multi_line_output      = 3
 include_trailing_comma = true
-force_grid_wrap = 0
+force_grid_wrap        = 0

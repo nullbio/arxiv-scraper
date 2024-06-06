@@ -1,11 +1,11 @@
-from datetime import datetime
-import os
-from typing import Tuple
 import logging
+import os
+from datetime import datetime
+from typing import Tuple
 
 # Local modules
-from request import Request
 import parse
+from request import Request
 
 
 class Category:
@@ -41,7 +41,7 @@ class Scrape:
         self.log = log
         self.download_dir = download_dir
         # Create a parser
-        self.parse = parse.Parse(request, log)
+        self.parse = parse.Parse(log)
 
         # Create the download directory if it doesn't exist
         os.makedirs(download_dir, exist_ok=True)
@@ -50,7 +50,7 @@ class Scrape:
     # Example: https://arxiv.org/list/cs/1805 -> returns int(4158)
     def total_entries(self, url: str) -> int:
         r = self.request.get(url)
-        return self.parse.total_entries(r.text)
+        return self.parse.total_entries(r.text, url)
 
 
 class ArchivePage:

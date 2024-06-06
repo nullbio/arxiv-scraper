@@ -1,28 +1,18 @@
 import logging
+
+import django
 from requests import Session
 from requests_ratelimiter import LimiterAdapter
 
 # Local modules
-from scrape import Scrape
 from request import Request
+from scrape import Scrape
+from settings import *
 from sql import SQL
 
-DATABASE_FILE = "arxiv.db"
-DOWNLOAD_DIRECTORY = "arxiv_papers"
-ERROR_LOG_FILE = "errors.txt"
-LOG_FILE = "log.txt"
-ARXIV_API_URL = "http://export.arxiv.org/api/query"
-MAX_RESULTS_PER_REQUEST = 1000
-SLEEP_TIME_BETWEEN_REQUESTS = 3  # seconds
-
-withdraw_keywords = [
-    "withdraw",
-    "withdrew",
-    "withdrawn",
-    "retracted",
-    "retract",
-]
-
+# initialize django's settings
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings")
+django.setup()
 
 # set up the logger
 log = logging.getLogger(__name__)
@@ -49,7 +39,7 @@ request = Request(session, log)
 scrape = Scrape(request, log, DOWNLOAD_DIRECTORY)
 
 # set up the sqlite connection
-sql = SQL(DATABASE_FILE, log)
+sql = SQL(DATABASE_FILENAME, log)
 
 
 __all__ = ["log", "scrape", "sql", "request"]
