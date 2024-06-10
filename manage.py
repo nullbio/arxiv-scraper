@@ -3,7 +3,7 @@
 import sys
 
 # config sets up the logger, and initiates Django's settings.
-import config
+import project.core.config
 
 
 def main():

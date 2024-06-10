@@ -8,3 +8,4 @@ exclude =
     venv,
     .git
 ignore = F405, F403
+max-line-length = 88

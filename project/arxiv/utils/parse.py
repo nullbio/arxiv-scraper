@@ -24,7 +24,5 @@ class Parse:
             )
             exit(1)
 
-        self.log.debug(
-            "Total entries retrieved (%d) for url: %s", total_entries, url
-        )
+        self.log.debug("Total entries retrieved (%d) for url: %s", total_entries, url)
         return total_entries

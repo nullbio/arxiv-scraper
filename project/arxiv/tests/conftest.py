@@ -4,11 +4,11 @@ import re
 from unittest.mock import Mock
 
 import pytest
-from requests import Session
 
 # Local modules
 from parse import Parse
 from request import Request
+from requests import Session
 from scrape import Scrape
 from sql import SQL
 

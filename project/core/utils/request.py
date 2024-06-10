@@ -5,9 +5,7 @@ from requests import Session
 
 
 class Request(Session):
-    def __init__(
-        self, session, log: logging.Logger, sleep_seconds=5, max_retries=5
-    ):
+    def __init__(self, session, log: logging.Logger, sleep_seconds=5, max_retries=5):
         self.session = session
         self.log = log
         self.sleep_seconds = sleep_seconds
@@ -21,9 +19,7 @@ class Request(Session):
             try:
                 result = self.session.get(url, params=params, headers=headers)
                 if result.status_code != 200:
-                    raise Exception(
-                        f"failed with status code {result.status_code}"
-                    )
+                    raise Exception(f"failed with status code {result.status_code}")
 
             except Exception as e:
                 self.log.error(
@@ -46,5 +42,6 @@ class Request(Session):
                 time.sleep(self.sleep_seconds * counter)
                 counter += 1
                 continue
-
+            if result is None:
+                exit(1)
             return result

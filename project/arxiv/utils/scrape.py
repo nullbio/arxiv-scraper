@@ -3,9 +3,8 @@ import os
 from datetime import datetime
 from typing import Tuple
 
-# Local modules
-import parse
-from request import Request
+from project.arxiv.utils import parse
+from project.core.utils.request import Request
 
 
 class Category:
@@ -34,9 +33,7 @@ class Category:
 
 
 class Scrape:
-    def __init__(
-        self, request: Request, log: logging.Logger, download_dir: str
-    ):
+    def __init__(self, request: Request, log: logging.Logger, download_dir: str):
         self.request = request
         self.log = log
         self.download_dir = download_dir

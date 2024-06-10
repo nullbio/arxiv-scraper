@@ -1,21 +1,28 @@
-from config import scrape, sql
-from models.models import Category
+import os
+import sys
+
+# from config import scrape, sql
+# from models.models import Category
+
 
 # from scrape import Category
 
 
 def main():
-    categories = Category.objects.all()
-    for category in categories:
-        print(category.name)
-    # Get the categories we want to scrape and their
-    # oldest years they have papers for.
-    # categories = map(
-    #     lambda x: Category(x["category"], x["end_year"]), sql.get_categories()
-    # )
+    print(os.environ.get("PYTHONPATH"))
 
-    # Create the skip list. We don't want to try and download this
-    # metadata because it's already been finished.
+
+# categories = Category.objects.all()
+# for category in categories:
+#     print(category.name)
+# Get the categories we want to scrape and their
+# oldest years they have papers for.
+# categories = map(
+#     lambda x: Category(x["category"], x["end_year"]), sql.get_categories()
+# )
+
+# Create the skip list. We don't want to try and download this
+# metadata because it's already been finished.
 
 
 # skip_list = sql.get_finished_archive_urls()
