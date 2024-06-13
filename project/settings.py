@@ -25,10 +25,10 @@ AVAILABLE_PLUGINS = [
 ]
 
 DOWNLOAD_DIRECTORY = os.environ.get(
-    "DOWNLOAD_DIRECTORY", os.path.join(BASE_DIR, "arxiv_papers")
+    "DOWNLOAD_DIRECTORY", os.path.join(BASE_DIR, "documents")
 )
 
-DATABASE_PATH = os.environ.get("DATABASE_PATH", os.path.join(BASE_DIR, "arxiv.db"))
+DATABASE_PATH = os.environ.get("DATABASE_PATH", os.path.join(BASE_DIR, "scrapii.db"))
 DATABASE_CONNECTION = f"sqlite:///{DATABASE_PATH}"
 DATABASES = {"default": {"ENGINE": "django.db.backends.sqlite3", "NAME": DATABASE_PATH}}
 

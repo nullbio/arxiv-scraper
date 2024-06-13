@@ -31,6 +31,7 @@ class Plugin(AbstractModel):
 
 # The arxiv categories, for example: math, cs, etc.
 # This table is seeded on database creation.
+# All plugins should conform to the arXiv category naming conventions.
 #
 # by default, all categories are scraped. Set DISABLED_CATEGORIES environment
 # variable to a comma-separated list of category names to disable scraping.
