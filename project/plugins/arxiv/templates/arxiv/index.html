@@ -1,0 +1,5 @@
+<!-- example template file. goes in subdir arxiv because django look for 
+ all templates in a "templates" directory for each app, so we need this to namespace
+to avoid collisions across apps. -->
+{% load static %}
+<link rel="stylesheet" href="{% static 'arxiv/style.css' %}">

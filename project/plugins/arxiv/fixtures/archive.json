@@ -1,0 +1,57 @@
+[
+  {
+    "model": "arxiv.archive",
+    "pk": 1,
+    "fields": { "category": 1, "end_year": 1992 }
+  },
+  {
+    "model": "arxiv.archive",
+    "pk": 2,
+    "fields": { "category": 2, "end_year": 1996 }
+  },
+  {
+    "model": "arxiv.archive",
+    "pk": 3,
+    "fields": { "category": 3, "end_year": 1993 }
+  },
+  {
+    "model": "arxiv.archive",
+    "pk": 4,
+    "fields": { "category": 4, "end_year": 1996 }
+  },
+  {
+    "model": "arxiv.archive",
+    "pk": 5,
+    "fields": { "category": 5, "end_year": 1992 }
+  },
+  {
+    "model": "arxiv.archive",
+    "pk": 6,
+    "fields": { "category": 6, "end_year": 1993 }
+  },
+  {
+    "model": "arxiv.archive",
+    "pk": 7,
+    "fields": { "category": 7, "end_year": 2003 }
+  },
+  {
+    "model": "arxiv.archive",
+    "pk": 8,
+    "fields": { "category": 8, "end_year": 2008 }
+  },
+  {
+    "model": "arxiv.archive",
+    "pk": 9,
+    "fields": { "category": 9, "end_year": 2017 }
+  },
+  {
+    "model": "arxiv.archive",
+    "pk": 10,
+    "fields": { "category": 10, "end_year": 2017 }
+  },
+  {
+    "model": "arxiv.archive",
+    "pk": 11,
+    "fields": { "category": 11, "end_year": 2017 }
+  }
+]

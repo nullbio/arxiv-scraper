@@ -1,16 +1,29 @@
 import os
 from pathlib import Path
 
-from project.core.utils.utils import strtobool
+import dotenv
+
+from project.core.utils import strtobool
+
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent  # project root
+
+##############################
+# Load the .env vars
+##############################
+ENV_FILE_PATH = BASE_DIR / ".env"
+dotenv.load_dotenv(str(ENV_FILE_PATH))
 
 ##############################
 # PROJECT SPECIFIC SETTINGS
 ##############################
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent  # project root
+DEBUG = strtobool(os.environ.get("DEBUG", False))
 
-# Environment variables
+AVAILABLE_PLUGINS = [
+    ("Arxiv", "project.plugins.arxiv"),
+]
+
 DOWNLOAD_DIRECTORY = os.environ.get(
     "DOWNLOAD_DIRECTORY", os.path.join(BASE_DIR, "arxiv_papers")
 )
@@ -19,9 +32,9 @@ DATABASE_PATH = os.environ.get("DATABASE_PATH", os.path.join(BASE_DIR, "arxiv.db
 DATABASE_CONNECTION = f"sqlite:///{DATABASE_PATH}"
 DATABASES = {"default": {"ENGINE": "django.db.backends.sqlite3", "NAME": DATABASE_PATH}}
 
-LOG_LEVEL = os.environ.get("LOG_LEVEL", "WARNING")
-LOG_FILE = os.environ.get("LOG_FILE", os.path.join(BASE_DIR, "log.txt"))
-ERROR_LOG_FILE = os.environ.get("ERROR_LOG_FILE", os.path.join(BASE_DIR, "errors.txt"))
+LOG_LEVEL = os.environ.get("LOG_LEVEL", "DEBUG" if DEBUG else "WARNING")
+LOG_FILE = os.environ.get("LOG_FILE", os.path.join(BASE_DIR, "general.log"))
+ERROR_LOG_FILE = os.environ.get("ERROR_LOG_FILE", os.path.join(BASE_DIR, "errors.log"))
 
 # Force range between 1 and 2000
 max_results_per_request = int(os.environ.get("MAX_RESULTS_PER_REQUEST", 2000))
@@ -38,8 +51,6 @@ MAX_REQUESTS_PER_SECOND = (
     if max_requests_per_second <= 10.0 and max_requests_per_second > 0.0
     else 1.0
 )
-
-DEBUG = strtobool(os.environ.get("DEBUG", False))
 
 SECRET_KEY = os.environ.get("SECRET_KEY")
 if not SECRET_KEY:
@@ -91,9 +102,38 @@ WITHDRAW_KEYWORDS = [
 
 INSTALLED_APPS = ("core",)
 
-# disable django's logger so our config.py logger can be used.
-# We want to use our own logger, defined in config.py
-LOGGING_CONFIG = None
+LOGGING = {
+    "version": 1,  # the dictConfig format version
+    "disable_existing_loggers": False,  # retain the default loggers
+    "formatters": {
+        "standard": {"format": "%(asctime)s [%(levelname)s] %(name)s: %(message)s"},
+    },
+    "handlers": {
+        "general": {
+            "class": "logging.FileHandler",
+            "filename": LOG_FILE,
+            "level": LOG_LEVEL,
+            "formatter": "standard",
+        },
+        "errors": {
+            "class": "logging.FileHandler",
+            "filename": ERROR_LOG_FILE,
+            "level": "ERROR",
+            "formatter": "standard",
+        },
+        "console": {
+            "class": "logging.StreamHandler",
+            "level": LOG_LEVEL,
+            "formatter": "standard",
+        },
+    },
+    "loggers": {
+        "": {
+            "level": LOG_LEVEL,
+            "handlers": ["general", "errors", "console"],
+        },
+    },
+}
 
 # Default automatic id field generation for models
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
@@ -104,14 +144,17 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    # Core app (initialises plugins)
+    "project.core",
+    # Scraper plugins
+    "project.plugins.arxiv",
+    # Django apps
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "core",
-    "plugins.arxiv",
 ]
 
 MIDDLEWARE = [

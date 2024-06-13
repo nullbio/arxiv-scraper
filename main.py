@@ -8,8 +8,8 @@ import sys
 # from scrape import Category
 
 
-def main():
-    print(os.environ.get("PYTHONPATH"))
+# def main():
+#    print(os.environ.get("PYTHONPATH"))
 
 
 # categories = Category.objects.all()
@@ -51,5 +51,5 @@ def main():
 # sql.close()
 
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#    main()

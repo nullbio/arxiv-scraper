@@ -3,8 +3,8 @@ import os
 from datetime import datetime
 from typing import Tuple
 
-from project.arxiv.utils import parse
-from project.core.utils.request import Request
+from project.core.utils import ScrapeSession
+from project.plugins.arxiv import parse
 
 
 class Category:
@@ -33,8 +33,8 @@ class Category:
 
 
 class Scrape:
-    def __init__(self, request: Request, log: logging.Logger, download_dir: str):
-        self.request = request
+    def __init__(self, session: ScrapeSession, log: logging.Logger, download_dir: str):
+        self.session = session
         self.log = log
         self.download_dir = download_dir
         # Create a parser
@@ -46,7 +46,7 @@ class Scrape:
     # Get the total number of entries on a particular archive url page:
     # Example: https://arxiv.org/list/cs/1805 -> returns int(4158)
     def total_entries(self, url: str) -> int:
-        r = self.request.get(url)
+        r = self.session.get(url)
         return self.parse.total_entries(r.text, url)
 
 

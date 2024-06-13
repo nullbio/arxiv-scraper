@@ -1,0 +1,112 @@
+[
+  {
+    "model": "core.category",
+    "pk": 1,
+    "fields": {
+      "name": "cond-mat",
+      "disable_override": false,
+      "created_at": "2024-06-12T15:02:28.827Z",
+      "updated_at": "2024-06-12T15:02:28.827Z"
+    }
+  },
+  {
+    "model": "core.category",
+    "pk": 2,
+    "fields": {
+      "name": "math-ph",
+      "disable_override": false,
+      "created_at": "2024-06-12T15:02:28.827Z",
+      "updated_at": "2024-06-12T15:02:28.827Z"
+    }
+  },
+  {
+    "model": "core.category",
+    "pk": 3,
+    "fields": {
+      "name": "nlin",
+      "disable_override": false,
+      "created_at": "2024-06-12T15:02:28.827Z",
+      "updated_at": "2024-06-12T15:02:28.827Z"
+    }
+  },
+  {
+    "model": "core.category",
+    "pk": 4,
+    "fields": {
+      "name": "physics",
+      "disable_override": false,
+      "created_at": "2024-06-12T15:02:28.827Z",
+      "updated_at": "2024-06-12T15:02:28.827Z"
+    }
+  },
+  {
+    "model": "core.category",
+    "pk": 5,
+    "fields": {
+      "name": "math",
+      "disable_override": false,
+      "created_at": "2024-06-12T15:02:28.827Z",
+      "updated_at": "2024-06-12T15:02:28.827Z"
+    }
+  },
+  {
+    "model": "core.category",
+    "pk": 6,
+    "fields": {
+      "name": "cs",
+      "disable_override": false,
+      "created_at": "2024-06-12T15:02:28.827Z",
+      "updated_at": "2024-06-12T15:02:28.827Z"
+    }
+  },
+  {
+    "model": "core.category",
+    "pk": 7,
+    "fields": {
+      "name": "q-bio",
+      "disable_override": false,
+      "created_at": "2024-06-12T15:02:28.827Z",
+      "updated_at": "2024-06-12T15:02:28.827Z"
+    }
+  },
+  {
+    "model": "core.category",
+    "pk": 8,
+    "fields": {
+      "name": "q-fin",
+      "disable_override": false,
+      "created_at": "2024-06-12T15:02:28.827Z",
+      "updated_at": "2024-06-12T15:02:28.827Z"
+    }
+  },
+  {
+    "model": "core.category",
+    "pk": 9,
+    "fields": {
+      "name": "stat",
+      "disable_override": false,
+      "created_at": "2024-06-12T15:02:28.827Z",
+      "updated_at": "2024-06-12T15:02:28.827Z"
+    }
+  },
+  {
+    "model": "core.category",
+    "pk": 10,
+    "fields": {
+      "name": "eess",
+      "disable_override": false,
+      "created_at": "2024-06-12T15:02:28.827Z",
+      "updated_at": "2024-06-12T15:02:28.827Z"
+    }
+  },
+  {
+    "model": "core.category",
+    "pk": 11,
+    "fields": {
+      "name": "econ",
+      "disable_override": false,
+      "created_at": "2024-06-12T15:02:28.827Z",
+      "updated_at": "2024-06-12T15:02:28.827Z"
+    }
+  }
+]
