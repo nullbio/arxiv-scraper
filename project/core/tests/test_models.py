@@ -6,7 +6,7 @@ import project.core.models as models
 class TestModels:
     @pytest.fixture(autouse=True)
     def reload_model_fixtures(self, reload_model_fixtures):
-        # Reload the model fixtures after every test
+        # Reload the model fixtures after every test. See conftest.py for explanation.
         pass
 
     @pytest.mark.django_db

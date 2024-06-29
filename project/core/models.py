@@ -21,10 +21,11 @@ class AbstractModel(models.Model, metaclass=AbstractModelMeta):
 class Plugin(AbstractModel):
     name = models.TextField(unique=True)
     enabled = models.BooleanField(default=False)
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(null=True, blank=True, auto_now=True)
 
-    # TODO: Add __str__ methods for all models, which is the human readable object output
+    # TODO: Add __str__ methods for all models, which is human readable object output
     def __str__(self):
         return self.name
 
@@ -32,17 +33,12 @@ class Plugin(AbstractModel):
 # The arxiv categories, for example: math, cs, etc.
 # This table is seeded on database creation.
 # All plugins should conform to the arXiv category naming conventions.
-#
-# by default, all categories are scraped. Set DISABLED_CATEGORIES environment
-# variable to a comma-separated list of category names to disable scraping.
 class Category(AbstractModel):
     # Names must conform to the arXiv category naming conventions for all plugins.
     name = models.TextField(unique=True)
 
-    # Scraping can be disabled for a category by setting this to True.
-    # This will override the ENABLED_CATEGORIES environment variable,
-    # and the default behavior of scraping all categories.
-    disable_override = models.BooleanField(default=False)
+    # Scraping can be disabled for a category globally by setting this to True.
+    disabled = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(null=True, blank=True, auto_now=True)
 
@@ -53,6 +49,14 @@ class Category(AbstractModel):
 class Document(AbstractModel):
     title = models.TextField()
     categories = models.ManyToManyField(Category)
+    # if the user has favorited this document, it can be easily found
+    favorite = models.BooleanField(default=False)
+    # rating is a number between 0 and 5
+    rating = models.FloatField(default=0)
+    # an additional flag that can be used by plugins for misc purposes
+    # is usually a number between 0 and 5, but can technically be anything
+    # as it is not depended on by the core application.
+    flag = models.FloatField(default=0)
     page_link = models.TextField(unique=True, null=True, blank=True)
     file_link = models.TextField(unique=True, null=True, blank=True)
     # Flag to skip downloading the html page. This should be set to true if
@@ -98,6 +102,10 @@ class Paper(Document):
     #    pass
 
 
+# class Video(Document): // TODO: if we want to support video downloading/scraping
+# class Image(Document): // TODO: if we want to support images
+
+
 class File(AbstractModel):
     md5_hash = models.TextField(max_length=32, unique=True)
     name = models.TextField(unique=True)
@@ -105,8 +113,7 @@ class File(AbstractModel):
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey("content_type", "object_id")
-    # if we want to prune old papers we don't care about on our disk,
-    # but still keep a record of the file in the database,
+    # if we want to prune old documents we don't care about on our disk,
     # we can prune them and record the date they were deleted.
     # this way we don't have stale links to non-existent files in our database.
     deleted_at = models.DateTimeField(null=True, blank=True)
@@ -121,17 +128,3 @@ async def handlePreDelete(sender, **kwargs):
     filepath = os.path.join(settings.DOWNLOAD_DIRECTORY, file.name)
     if os.path.isfile(filepath):
         os.remove(filepath)
-
-
-# insert the categories we want to scrape and the oldest year they have papers for
-# INSERT OR IGNORE INTO category (name, end_year) VALUES ('cond-mat', 1992);
-# INSERT OR IGNORE INTO category (name, end_year) VALUES ('math-ph', 1996);
-# INSERT OR IGNORE INTO category (name, end_year) VALUES ('nlin', 1993);
-# INSERT OR IGNORE INTO category (name, end_year) VALUES ('physics', 1996);
-# INSERT OR IGNORE INTO category (name, end_year) VALUES ('math', 1992);
-# INSERT OR IGNORE INTO category (name, end_year) VALUES ('cs', 1993);
-# INSERT OR IGNORE INTO category (name, end_year) VALUES ('q-bio', 2003);
-# INSERT OR IGNORE INTO category (name, end_year) VALUES ('q-fin', 2008);
-# INSERT OR IGNORE INTO category (name, end_year) VALUES ('stat', 2017);
-# INSERT OR IGNORE INTO category (name, end_year) VALUES ('eess', 2017);
-# INSERT OR IGNORE INTO category (name, end_year) VALUES ('econ', 2017);

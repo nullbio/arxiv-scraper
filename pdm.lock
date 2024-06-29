@@ -5,7 +5,7 @@
 groups = ["default"]
 strategy = ["cross_platform", "inherit_metadata"]
 lock_version = "4.4.1"
-content_hash = "sha256:d4b2b771fd9d1f67cccbc9fa0e2034b3b5f59bc700cc6551295edeca71690bf5"
+content_hash = "sha256:1b99dd3b93310f2e0f1426c17b85afeab6d5d6ce8a1ca9f62f0181ba3e76d50e"
 
 [[package]]
 name = "arxivscraper"

@@ -87,17 +87,3 @@ class Paper(core_models.Paper):
 
     def __str__(self):
         return self.title
-
-
-# insert the categories we want to scrape and the oldest year they have papers for
-# INSERT OR IGNORE INTO category (name, end_year) VALUES ('cond-mat', 1992);
-# INSERT OR IGNORE INTO category (name, end_year) VALUES ('math-ph', 1996);
-# INSERT OR IGNORE INTO category (name, end_year) VALUES ('nlin', 1993);
-# INSERT OR IGNORE INTO category (name, end_year) VALUES ('physics', 1996);
-# INSERT OR IGNORE INTO category (name, end_year) VALUES ('math', 1992);
-# INSERT OR IGNORE INTO category (name, end_year) VALUES ('cs', 1993);
-# INSERT OR IGNORE INTO category (name, end_year) VALUES ('q-bio', 2003);
-# INSERT OR IGNORE INTO category (name, end_year) VALUES ('q-fin', 2008);
-# INSERT OR IGNORE INTO category (name, end_year) VALUES ('stat', 2017);
-# INSERT OR IGNORE INTO category (name, end_year) VALUES ('eess', 2017);
-# INSERT OR IGNORE INTO category (name, end_year) VALUES ('econ', 2017);
