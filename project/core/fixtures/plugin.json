@@ -1,0 +1,12 @@
+[
+  {
+    "model": "core.plugin",
+    "pk": 1,
+    "fields": {
+      "name": "Arxiv",
+      "module_path": "project.plugins.arxiv",
+      "created_at": "2024-06-12T15:02:28.827Z",
+      "updated_at": "2024-06-12T15:02:28.827Z"
+    }
+  }
+]

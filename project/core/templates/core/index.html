@@ -1,0 +1,28 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'core/style.css' %}">
+<p>index plugins</p>
+<table border="1">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Enabled</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for plugin in plugins_list %}
+            <tr>
+                <td>
+                    <a href="{% url plugin.name|lower|add:':index' %}">{{ plugin.name }}</a>
+                </td>
+                <td>{{ plugin.enabled }}</td>
+                <td>
+                    <form action="{% url "core:plugin_toggle" plugin.pk %}" method="post">
+                        {% csrf_token %}
+                        <input type="submit" value="{% if plugin.enabled %}Disable{% else %}Enable{% endif %}">
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

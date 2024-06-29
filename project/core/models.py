@@ -19,7 +19,10 @@ class AbstractModel(models.Model, metaclass=AbstractModelMeta):
 
 
 class Plugin(AbstractModel):
+    # The user-facing name of the plugin, e.g. "Arxiv" or "Arxiv Scraper"
     name = models.TextField(unique=True)
+    # The path to the plugin module, e.g. "project.plugins.arxiv"
+    module_path = models.TextField(unique=True)
     enabled = models.BooleanField(default=False)
 
     created_at = models.DateTimeField(auto_now_add=True)
