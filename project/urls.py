@@ -58,7 +58,6 @@ def dynamic_plugin_urls():
     except Exception as e:
         logger.error(f"Cannot load plugins, database not configured: {e}")
         return urlpatterns
-    logger.info(urlpatterns)
     return urlpatterns
 
 

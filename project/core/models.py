@@ -1,12 +1,8 @@
 import abc
-import os
 
-from django.conf import settings
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
-from django.db.models.signals import pre_delete
-from django.dispatch import receiver
 
 
 class AbstractModelMeta(abc.ABCMeta, type(models.Model)):
@@ -122,12 +118,3 @@ class File(AbstractModel):
     deleted_at = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(null=True, blank=True, auto_now=True)
-
-
-# delete the file from disk if it exists
-@receiver(pre_delete, sender=File, dispatch_uid="filePreDelete")
-async def handlePreDelete(sender, **kwargs):
-    file = kwargs["instance"]
-    filepath = os.path.join(settings.DOWNLOAD_DIRECTORY, file.name)
-    if os.path.isfile(filepath):
-        os.remove(filepath)

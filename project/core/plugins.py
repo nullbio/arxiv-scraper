@@ -1,35 +1,51 @@
-import importlib
 import logging
 from abc import ABC, abstractmethod
 
+from celery import shared_task
+from celery.contrib.abortable import AbortableAsyncResult, AbortableTask
+from django.apps import apps
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
 
 class PluginManager:
-    def __init__(self, plugins):
-        self.log = logging.getLogger(__name__)
-        self.active_plugins = []
-        self.config = {}
+    _instance = None
 
-    def load_plugin(self, class_name, module_name):
-        """Create an instance of the given plugin, and add it to the
-        PluginManager's active plugins list.
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+            cls._instance.initialize()
+        return cls._instance
 
-        Args:
-            class_name (str): The name of the plugin class (e.g. "Arxiv")
-            module_name (str): The path to the module (e.g. "project.plugins.arxiv")
-        """
-        if class_name not in self.active_plugins:
-            module = importlib.import_module(f"{module_name}.plugin")
-            plugin = getattr(module, class_name)()
-            self.active_plugins.append(plugin)
+    def initialize(self):
+        self.plugins = {}
+        self.tasks = {}
 
-    def run_all_plugins(self):
-        self.log.debug("Running all active plugins")
-        for plugin in self.active_plugins:
-            plugin.setup(self.config)
-            plugin.run()
+    def register_plugin(self, app_label, plugin_class):
+        self.plugins[app_label] = plugin_class()
+
+    def start_plugin(self, app_label):
+        if app_label in self.plugins:
+            plugin = self.plugins[app_label]
+            task = plugin.run.delay()
+            self.tasks[app_label] = task
+
+    def stop_plugin(self, app_label):
+        if app_label in self.tasks:
+            task = self.tasks[app_label]
+            AbortableAsyncResult(task.id).abort()
+            del self.tasks[app_label]
+
+    def initialize_plugins(self):
+        from project.core.models import Plugin
+
+        for plugin in Plugin.objects.filter(enabled=True):
+            app_label = plugin.module_path.split(".")[-1]
+            if app_label in self.plugins:
+                self.start_plugin(app_label)
 
 
-class PluginBase(ABC):
+class BasePlugin(ABC):
     @property
     @abstractmethod
     def name(self):
@@ -50,5 +66,13 @@ class PluginBase(ABC):
         pass
 
     @abstractmethod
-    def run(self):
+    def task(self):
         pass
+
+    @shared_task(bind=True, base=AbortableTask)
+    def run(self):
+        while not self.is_aborted():
+            self.task()
+
+
+plugin_manager = PluginManager()

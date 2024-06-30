@@ -1,13 +1,8 @@
-import _thread
 import logging
 import os
-import threading
-import time
 
-from django.apps import AppConfig, apps
+from django.apps import AppConfig
 from django.core.checks import Error, register
-
-import project.settings as settings
 
 
 class CoreConfig(AppConfig):
@@ -16,27 +11,14 @@ class CoreConfig(AppConfig):
     def ready(self):
         self.log = logging.getLogger(__name__)
 
-        # Prevent the autoreload runserver from running this code,
-        # Otherwise it will be run twice.
         if os.environ.get("RUN_MAIN") == "true":
-            # Wait for all apps/plugins to be ready
-            while not apps.check_apps_ready():
-                self.log.debug("Waiting for all apps to be ready...")
-                time.sleep(1)
-
-            from project.core.models import Plugin
-            from project.core.plugins import PluginManager
+            # Import signals to register them
+            from project.core import signals  # noqa: F401
+            from project.core.plugins import plugin_manager
 
             self.log.debug("Initializing core app and plugins")
 
-            # set up the plugin manager
-            self.plugin_manager = PluginManager(Plugin.objects.all())
-
-            # run the plugins
-            for plugin_classname, plugin_path in settings.AVAILABLE_PLUGINS:
-                self.plugin_manager.load_plugin(plugin_classname, plugin_path)
-
-            self.plugin_manager.run_all_plugins()
+            plugin_manager.initialize_plugins()
 
 
 @register()
