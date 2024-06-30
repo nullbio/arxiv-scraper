@@ -20,7 +20,6 @@ from importlib import import_module
 from django.contrib import admin
 from django.urls import include, path
 
-from project.core import views
 from project.core.models import Plugin
 
 app_name = "core"

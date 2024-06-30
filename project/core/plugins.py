@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 
 
 class PluginManager:
-    def __init__(self):
+    def __init__(self, plugins):
         self.log = logging.getLogger(__name__)
         self.active_plugins = []
         self.config = {}
